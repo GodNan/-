@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>残疾人卡检测</title>
+
+        <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+        <meta http-equiv="description" content="残疾人卡检测">
+        <meta http-equiv="content-type" content="text/html; charset=GBK">
+
+        <OBJECT id=GetBMACInfo WIDTH=0 HEIGHT=0 classid=CLSID:C00D1444-E342-4BF1-8A0F-785632DC6356></OBJECT>
+        <OBJECT id=CLActiveX align="CENTER" WIDTH=0 HEIGHT=0 classid="CLSID:69D911CE-BE12-444D-AEF3-DA4FFFD758F4"></OBJECT>
+    </head>
+    <style>
+        .btn { /* 按钮美化 */
+            width: 150px; /* 宽度 */
+            height: 40px; /* 高度 */
+            border-width: 0px; /* 边框宽度 */
+            border-radius: 3px; /* 边框半径 */
+            background: #1E90FF; /* 背景颜色 */
+            cursor: pointer; /* 鼠标移入按钮范围时出现手势 */
+            outline: none; /* 不显示轮廓线 */
+            font-family: Microsoft YaHei; /* 设置字体 */
+            color: white; /* 字体颜色 */
+            font-size: 17px; /* 字体大小 */
+        }
+    </style>
+<!--<script type="text/javascript" src="../static/jquery/jquery.min.js"></script>-->
+<!--<script type="text/javascript" src="../static/jquery/jquery.cookie.js"></script>-->
+<script type="text/javascript" src="http://172.30.0.31/bdpfnew/static/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="http://172.30.0.31/bdpfnew/static/jquery/jquery.cookie.js"></script>
+<script charset="gb2312" type="text/javascript" src="checkCard.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#clBtn').on('click', function() {
+            if(confirm("您确定要关闭本页吗？")) {
+                window.opener = null;
+                window.open('', '_self');
+                window.close();
+            } else {}
+
+        })
+        $("#recordsBtn").on('click',function(){
+            if (card_checkB()) {
+                $("#cardBalance").html(getCardBalance()) // 1、获取卡片余额
+                $("#cardstatus").html(getCardStatus()) // 2、读卡片状态
+                $("#activedate").html(getCardDate()[0]) // 3、取卡片启用日期
+                $("#disdate").html(getCardDate()[1]) // 4、取卡片失效日期
+                $("#isCompleted").html(isCompleteTransaction()) // 5、判断是否是不完整交易
+                $("#isOldCard").html(isOldCard()) // 6、判断是否为旧卡
+            }
+        })
+    })
+</script>
+<body>
+    <input type="hidden" name="cardNo" id="cardNo"/>
+    <div>
+        <div style="text-align:center">
+            <h3>
+                卡片检测
+            </h3>
+        </div>
+        <div id=formTable style="text-align:center">
+            <table style="margin:auto">
+                <tr>
+                    <th align="right">卡片余额</th>
+                    <td>
+                        <label id="cardBalance" >  --待检测--&nbsp;</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th align="right">卡片状态</th>
+                    <td>
+                        <label id="cardstatus" >  --待检测--&nbsp;</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th align="right">启用日期</th>
+                    <td>
+                        <label id="activedate" >  --待检测--&nbsp;</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th align="right">失效日期</th>
+                    <td>
+                        <label id="disdate" >  --待检测--&nbsp;</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th align="right">交易信息</th>
+                    <td>
+                        <label id="isCompleted" >  --待检测--&nbsp;</label>
+                    </td>
+                </tr>&nbsp;&nbsp;&nbsp;
+                <tr>
+                    <th align="right">是否旧卡</th>
+                    <td>
+                        <label id="isOldCard" >  --待检测--&nbsp;</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tdBottom" colspan="2">
+                        <input class="btn" id="recordsBtn" name="recordsBtn" type="button"
+                               value="信息检测">
+                        <input class="btn" id="clBtn" name="clBtn" type="button"
+                               value="关闭">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

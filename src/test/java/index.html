@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>测试</title>
+    <script type="text/javascript" src="/jquery-1.9.0.js"></script>
+</head>
+<body>
+<form id="data" action="http://localhost:8080/login/auth" method="post">
+    账号：<input type="text" name="username">
+    密码：<input type="password" name="password">
+    <button type="button" id="bt">提交</button>
+</form>
+</body>
+<script>
+    $("#").click(function () {
+        var data = $("#data").serialize()
+        alert(data)
+        $.ajax({
+            type: "POST",
+            data: data,
+            url: "http://localhost:8080/login/auth",
+            success: function(){
+                $(this).addClass("done");
+            }
+        });
+    })
+</script>
+</html>

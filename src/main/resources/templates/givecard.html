@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=8">
+    <title>卡发放</title>
+
+    <OBJECT name=CLActiveX align="CENTER" WIDTH=0 HEIGHT=0 classid="CLSID:69D911CE-BE12-444D-AEF3-DA4FFFD758F4"></OBJECT>
+    <OBJECT id=yktReader classid=CLSID:19B0BDDF-D26D-4EF1-AF3C-1622B672E7D0></OBJECT>
+    <!-- add by liqi :残疾人卡检测 ，主要负责残疾人卡无法坐车，检测卡余额 -->
+    <OBJECT name="GetBMACInfo"  WIDTH="0" HEIGHT="0" classid="CLSID:C00D1444-E342-4BF1-8A0F-785632DC6356"></OBJECT>
+    <style>
+        .btn { /* 按钮美化 */
+            width: 270px; /* 宽度 */
+            height: 40px; /* 高度 */
+            border-width: 0px; /* 边框宽度 */
+            border-radius: 3px; /* 边框半径 */
+            background: #1E90FF; /* 背景颜色 */
+            cursor: pointer; /* 鼠标移入按钮范围时出现手势 */
+            outline: none; /* 不显示轮廓线 */
+            font-family: Microsoft YaHei; /* 设置字体 */
+            color: white; /* 字体颜色 */
+            font-size: 17px; /* 字体大小 */
+        }
+        .input_control{
+            width:360px;
+            margin:20px auto;
+        }
+        input[type="text"]{
+            box-sizing: border-box;
+            text-align:center;
+            font-size:1.4em;
+            height:2.7em;
+            border-radius:4px;
+            border:1px solid #c8cccf;
+            color:#6a6f77;
+            -web-kit-appearance:none;
+            -moz-appearance: none;
+            display:block;
+            outline:0;
+            padding:0 1em;
+            text-decoration:none;
+            width:100%;
+        }
+        input[type="text"]:focus{
+            border:1px solid #ff7496;
+        }
+    </style>
+</head>
+<!--<script type="text/javascript" src="../static/jquery/jquery.min.js"></script>-->
+<!--<script type="text/javascript" src="../static/jquery/jquery.cookie.js"></script>-->
+<script type="text/javascript" src="http://172.30.0.31/bdpfnew/static/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="http://172.30.0.31/bdpfnew/static/jquery/jquery.cookie.js"></script>
+<script charset="gb2312" type="text/javascript" src="givecard.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var requestIdCard = getParamFromUrl('requestIdCard');
+        var citizenId = getParamFromUrl('citizenId');
+        $("#requestIdCard").val(requestIdCard);
+        $("#citizenId").val(citizenId);
+        $('#bkcheckin').on('click',function(){
+            bkcheckin();
+        })
+        sNewCardInfo(citizenId)
+        sInfoData(citizenId);
+        sYearInfo(requestIdCard);
+        getCdpfCard(requestIdCard)
+        $("#giveCard").on('click',function(){
+            confirm_save_givedCard();
+        })
+
+        // 发卡第一步,判断卡流程,如果流程正确输入卡标记位
+        function confirm_save_givedCard(){
+            var _cardbusiness = document.getElementById('cardBusiness').value
+            if (_cardbusiness === '140') {
+                if (!confirm('此残疾人属于卡残损换新发卡,请确认旧卡已剪卡，待新卡下发后，新旧卡同时交由持卡人到北京银行完成新卡开卡旧卡回收')) {
+                    return
+                }
+            }
+            //校验卡标记位不能为空
+            var cardNoFlagTemp = $("#cardNoFlagTemp").val();
+//            if(cardNoFlagTemp == null || cardNoFlagTemp == ""){
+//                alert("请在发卡前，输入卡标记位");
+//                return
+//            }
+            // 发卡第二步
+            if (save_givedCard('')) {
+                givedCard();
+            }
+        }
+
+    })
+</script>
+<body>
+<form>
+    <div class="input_control">
+        <input type="text" id="cardNoFlagTemp" id="name" name="name" placeholder="请在发卡前输入卡标记位"/>
+    </div>
+</form>
+<form>
+
+</form>
+<div style="text-align: center;">
+    <button id="bkcheckin" class="btn">签到</button>
+    <button id="giveCard" class="btn">发卡</button>
+</div>
+<form>
+    <!--// 单位代码-->
+    <input type="hidden" id="unit" name="unit" value="75113001"/>
+    <!--// 商户代码-->
+    <input type="hidden" id="Mchnt" name="Mchnt" value="003080000001"/>
+    <!--// 设备编号-->
+    <input type="hidden" id="pos" name="pos" value="1234567890"/>
+    <!--// 操作员代码-->
+    <input type="hidden" id="opr" name="opr" value="000001"/>
+    <!--// 一卡通IP地址-->
+    <input type="hidden" id="ip_addr" name="ip_addr" value="172.30.0.61"/>
+    <!--// 一卡通通讯端口-->
+    <input type="hidden" id="serverport" name="serverport" value="5001"/>
+
+    <!-- 发卡需要字段 -->
+    <input type="hidden" name="newCardNo" id="newCardNo"/>
+    <!-- 发卡需要字段 -->
+    <input type="hidden" name="cardBusiness" id="cardBusiness"></input>
+    <!-- 发卡需要字段 -->
+    <input type="hidden" name="cardmakestate" id="cardmakestate"></input>
+    <!-- 发卡需要字段 -->
+    <input type="hidden" name="cardnoCheck" id="cardnoCheck" ></input>
+    <input type="hidden" name="requestIdCard" id="requestIdCard"></input>
+    <input type="hidden" name="citizenId" id="citizenId"></input>
+    <input type="hidden" name="check260" id="check260" value="0"></input>
+    <!-- 发卡需要字段 -->
+    <input type="hidden" name="cardNoFlagT" id="cardNoFlagT"></input>
+    <input type="hidden" name="oldCardNo" id="oldCardNo"></input>
+    <input type="hidden" name="sLossData" id="sLossData"></input>
+    <input type="hidden" name="sReleaseData" id="sReleaseData"></input>
+    <input type="hidden" name="sYearInfo" id="sYearInfo"></input>
+    <input type="hidden" name="sInfoData" id="sInfoData"></input>
+    <input type="hidden" name="sNewCardInfo" id="sNewCardInfo"></input>
+    <input type="hidden" name="sNewInfo" id="sNewInfo"></input>
+    <input type="hidden" name="cPersonInfo" id="cPersonInfo"></input>
+    <input type="hidden" name="cPhotoInfo" id="cPhotoInfo"></input>
+</form>
+</body>
+</html>

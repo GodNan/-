@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="connection.url">jdbc:oracle:thin:@10.149.56.40:1521:orcl</property>
+    <!--连接Oracle的用户名-->
+
+    <!--连接Oracle的密码-->
+
+    <!--连接Oracle的驱动类名-->
+    <property name="connection.driver_class">oracle.jdbc.OracleDriver</property>
+
+  </session-factory>
+</hibernate-configuration>

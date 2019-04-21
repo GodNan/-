@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset=utf-8>
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <title>北京市残疾人证(卡)管理系统</title>
+<!--<script th:src="@{/jquery/jquery.min.js}"></script>-->
+<style>
+    .topdiv{
+        text-align: center;
+    }
+    .one{
+        padding: 40px 0px;
+    }
+</style>
+</head>
+<body>
+<div class="topdiv">
+    <div class="one">
+        <b>正在跳转请稍候......</b>
+    </div>
+    <div class="two">
+        如系统不能正常跳转建议您使用IE11浏览器。
+    </div>
+</div>
+    <input type="hidden" id="tockionId" name="tockionId" th:value="${ tockionId }">
+<script>
+//    var httpstr = window.location.host;
+//    console.log("测试数据是否正常" + httpstr);
+    // CA登录所需代码块
+    window.location.href("http://172.30.0.31/bdpfnew/index.html#/login?tockionId=" + document.getElementById("tockionId").value);
+//    window.location.replace("http://"+httpstr + "/index.html#/login?tockionId=" + $("#tockionId").val());
+//    window.location.href = httpstr + "/index.html#/login?tockionId=" + $("#tockionId").val();
+</script>
+
+</body>
+</html>
